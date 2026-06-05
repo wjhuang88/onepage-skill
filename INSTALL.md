@@ -59,7 +59,7 @@ specific version, set `VERSION` to that exact tag instead.
 Unix-like shell:
 
 ```bash
-VERSION=$(curl -fsSL https://api.github.com/repos/wjhuang88/onepage/releases/latest \
+VERSION=$(curl -fsSL https://api.github.com/repos/wjhuang88/onepage-skill/releases/latest \
   | sed -n 's/.*"tag_name"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' \
   | head -n 1)
 test -n "$VERSION" || { echo "Could not detect latest release tag"; exit 1; }
@@ -75,7 +75,7 @@ VERSION=<release-tag>
 PowerShell:
 
 ```powershell
-$Version = (Invoke-RestMethod -Uri "https://api.github.com/repos/wjhuang88/onepage/releases/latest").tag_name
+$Version = (Invoke-RestMethod -Uri "https://api.github.com/repos/wjhuang88/onepage-skill/releases/latest").tag_name
 Write-Host "Using release: $Version"
 ```
 
@@ -96,12 +96,12 @@ rm -rf "$SKILLS_DIR/onepage"
 
 if command -v zstd >/dev/null 2>&1; then
   ARCHIVE=/tmp/onepage.tar.zst
-  URL="https://github.com/wjhuang88/onepage/releases/download/${VERSION}/onepage-${VERSION}.tar.zst"
+  URL="https://github.com/wjhuang88/onepage-skill/releases/download/${VERSION}/onepage-${VERSION}.tar.zst"
   curl -L --fail -o "$ARCHIVE" "$URL"
   zstd -dc "$ARCHIVE" | tar -xf - -C "$SKILLS_DIR"
 else
   ARCHIVE=/tmp/onepage.tar.gz
-  URL="https://github.com/wjhuang88/onepage/releases/download/${VERSION}/onepage-${VERSION}.tar.gz"
+  URL="https://github.com/wjhuang88/onepage-skill/releases/download/${VERSION}/onepage-${VERSION}.tar.gz"
   curl -L --fail -o "$ARCHIVE" "$URL"
   tar -xzf "$ARCHIVE" -C "$SKILLS_DIR"
 fi
@@ -163,9 +163,9 @@ without extra archive tools. Set `$SkillsDir` from section 1 and
 
 ```powershell
 $SkillsDir = ".agents\skills"
-$Version = (Invoke-RestMethod -Uri "https://api.github.com/repos/wjhuang88/onepage/releases/latest").tag_name
+$Version = (Invoke-RestMethod -Uri "https://api.github.com/repos/wjhuang88/onepage-skill/releases/latest").tag_name
 $ZipPath = Join-Path $env:TEMP "onepage.zip"
-$Url = "https://github.com/wjhuang88/onepage/releases/download/$Version/onepage-$Version.zip"
+$Url = "https://github.com/wjhuang88/onepage-skill/releases/download/$Version/onepage-$Version.zip"
 
 New-Item -ItemType Directory -Force -Path $SkillsDir | Out-Null
 Remove-Item -Recurse -Force (Join-Path $SkillsDir "onepage") -ErrorAction SilentlyContinue
@@ -188,7 +188,7 @@ Select-String -Path (Join-Path $SkillsDir "onepage\SKILL.md") -Pattern "^name: o
 
 | Symptom | Likely cause | Fix |
 | --- | --- | --- |
-| `curl: (22) The requested URL returned error: 404` / `Invoke-WebRequest` returns 404 | `${VERSION}` is not a real release tag, or that release does not include the selected archive | Re-run §2; copy the exact `vX.Y.Z` from the [Releases](https://github.com/wjhuang88/onepage/releases) page |
+| `curl: (22) The requested URL returned error: 404` / `Invoke-WebRequest` returns 404 | `${VERSION}` is not a real release tag, or that release does not include the selected archive | Re-run §2; copy the exact `vX.Y.Z` from the [Releases](https://github.com/wjhuang88/onepage-skill/releases) page |
 | Old files remain after update | Old install was not removed before extracting | Re-run §4 (`rm -rf` first), then §3 |
 | Agent does not load the skill after install | Loader started before install, or wrong directory | Restart the agent's session; double-check `SKILLS_DIR` matches the agent's expected path |
 | `Permission denied` writing under `~/.config/opencode/skills` | Path resolved to a system location instead of the user's home | Check `echo "$SKILLS_DIR"`; fall back to the project-level directory |

@@ -146,13 +146,13 @@ contains authoring source, release tooling, and this README.
 ### Install
 
 Download the latest release zip from
-[GitHub Releases](https://github.com/wjhuang88/onepage/releases) and
+[GitHub Releases](https://github.com/wjhuang88/onepage-skill/releases) and
 unpack it into your Agent Skills directory (typically
 `~/.codex/skills/` or your platform's equivalent):
 
 ```bash
 curl -L -o /tmp/onepage.zip \
-  https://github.com/wjhuang88/onepage/releases/latest/download/onepage.zip
+  https://github.com/wjhuang88/onepage-skill/releases/latest/download/onepage.zip
 unzip /tmp/onepage.zip -d ~/.codex/skills/
 ```
 

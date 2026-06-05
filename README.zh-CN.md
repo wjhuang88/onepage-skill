@@ -6,14 +6,14 @@
 
 生成物为**自包含的 `.html` 文件**：内联 CSS、无外部依赖、可直接分享、打印或嵌入。面向领导汇报、技术展示、路线图评审等场景。
 
-GitHub 仓库：<https://github.com/wjhuang88/onepage>
+GitHub 仓库：<https://github.com/wjhuang88/onepage-skill>
 
 ---
 
 ## 目录结构
 
 ```
-wjhuang88/onepage/
+wjhuang88/onepage-skill/
 ├── README.md                     # 英文说明
 ├── README.zh-CN.md               # 中文说明（本文件）
 ├── skills/
@@ -42,7 +42,7 @@ wjhuang88/onepage/
 将 Skill 克隆到本地后，可直接被支持 Skill 协议的 Agent 加载使用：
 
 ```bash
-git clone https://github.com/wjhuang88/onepage.git
+git clone https://github.com/wjhuang88/onepage-skill.git
 ```
 
 加载路径为仓库内的 `skills/onepage/` 目录。
@@ -212,7 +212,7 @@ git clone https://github.com/wjhuang88/onepage.git
 修改 Skill 文件后，运行基础校验（路径指向仓库内的 `skills/onepage/` 目录）：
 
 ```bash
-python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py /path/to/wjhuang88/onepage/skills/onepage
+python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py /path/to/wjhuang88/onepage-skill/skills/onepage
 ```
 
 重点人工检查项：
