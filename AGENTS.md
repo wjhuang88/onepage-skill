@@ -12,7 +12,9 @@
 │   └── onepage/                  # 可安装的 Skill 源（唯一编辑与发布入口）
 │       ├── SKILL.md              # Skill 入口：触发描述、核心流程、输出规则
 │       ├── references/
-│       │   └── design-system.md  # 详细版式、颜色语义、架构图和措辞经验
+│       │   ├── design-system.md      # 核心方法论：设计原理、模式选择、颜色语义、措辞、检查清单（每次生成都读）
+│       │   ├── layout-reference.md   # 布局与组件细节：CSS 布局、架构图指南、组件护栏（构建页面时按需读）
+│       │   └── advanced-guide.md     # 高级场景：大内容章节化、迭代指南、已知局限（复杂任务按需读）
 │       ├── assets/
 │       │   └── report-template.html  # 可复用的单页 HTML 模板
 │       └── agents/
@@ -27,7 +29,7 @@
 - `skills/onepage/SKILL.md` 必须保留 YAML frontmatter，且只包含规范需要的元数据。
 - `name` 必须是 `onepage`，并与目录名一致。
 - `description` 是触发入口，必须同时说明能力和适用场景；不要把触发条件只写在正文里。
-- 保持渐进加载：`SKILL.md` 只放核心工作流；详细设计经验放到 `references/`；可复制模板放到 `assets/`。
+- 保持渐进加载：`SKILL.md` 只放核心工作流；核心方法论放到 `references/design-system.md`；布局和组件细节放到 `references/layout-reference.md`；高级场景放到 `references/advanced-guide.md`；可复制模板放到 `assets/`。
 - 不要在 `skills/onepage/` 内新增 README、CHANGELOG、INSTALLATION 等辅助文档，避免 skill 目录膨胀。
 - 可安装的 Skill 源是 `skills/onepage/`。不要编辑或发布根目录的 skill 文件副本。
 - 发布归档必须以 `skills/onepage/` 为内容来源，并以 `onepage/` 作为归档的顶层目录。
