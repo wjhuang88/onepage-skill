@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{REPORT_TITLE}}</title>
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --panel: #ffffff;
+      --ink: #172033;
+      --muted: #647086;
+      --line: #dfe5ee;
+      --blue: #1f6feb;
+      --blue-soft: #eaf2ff;
+      --green: #1b8754;
+      --green-soft: #e9f7ef;
+      --orange: #b86600;
+      --orange-soft: #fff2dc;
+      --purple: #7657c8;
+      --purple-soft: #f1edff;
+      --yellow: #8a6d1f;
+      --yellow-soft: #fff8d8;
+      --red: #c63d32;
+      --red-soft: #ffeceb;
+      --shadow: 0 10px 28px rgba(25, 36, 60, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg);
+      font: 14px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      letter-spacing: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 28px 28px 56px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(300px, 0.6fr);
+      gap: 20px;
+      align-items: stretch;
+      margin-bottom: 22px;
+    }
+
+    .hero-main,
+    .hero-side,
+    .section,
+    .summary-card,
+    .matrix-card,
+    .next-step,
+    .diagram-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-main {
+      padding: 30px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 34px;
+      line-height: 1.18;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 820px;
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .hero-side {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 18px;
+    }
+
+    .metric {
+      min-height: 96px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcff;
+    }
+
+    .metric .value {
+      display: block;
+      font-size: 30px;
+      line-height: 1;
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    .metric .label {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fbfcff;
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      margin: 0 -28px 24px;
+      padding: 12px 28px;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: rgba(247, 248, 251, 0.94);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav a {
+      flex: 0 0 auto;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel);
+      color: #31415c;
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    .section {
+      margin-top: 20px;
+      padding: 24px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
+    }
+
+    h2,
+    h3 {
+      margin: 0;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: 23px;
+      line-height: 1.3;
+    }
+
+    h3 {
+      margin-top: 22px;
+      margin-bottom: 10px;
+      font-size: 17px;
+    }
+
+    .section-note {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: right;
+    }
+
+    .summary-grid,
+    .matrix-grid,
+    .next-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .summary-card,
+    .matrix-card,
+    .next-step {
+      padding: 18px;
+      box-shadow: none;
+    }
+
+    .summary-card strong,
+    .matrix-card strong,
+    .next-step strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #263752;
+      font-size: 15px;
+    }
+
+    .summary-card p,
+    .matrix-card p,
+    .next-step p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .architecture-set {
+      display: grid;
+      gap: 18px;
+    }
+
+    .architecture-flow {
+      display: grid;
+      grid-template-columns: minmax(220px, 0.85fr) minmax(0, 2fr) minmax(240px, 0.95fr);
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .diagram-card {
+      padding: 16px;
+      box-shadow: none;
+    }
+
+    .diagram-card.wide {
+      display: grid;
+      gap: 12px;
+    }
+
+    .diagram-card h3 {
+      margin: 0 0 8px;
+      font-size: 15px;
+    }
+
+    .diagram-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .node-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .node {
+      min-height: 72px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcff;
+    }
+
+    .node.blue {
+      border-color: #b8d2ff;
+      background: var(--blue-soft);
+    }
+
+    .node.green {
+      border-color: #b8e4cb;
+      background: var(--green-soft);
+    }
+
+    .node.orange {
+      border-color: #ffd9a3;
+      background: var(--orange-soft);
+    }
+
+    .node.purple {
+      border-color: #d4c8ff;
+      background: var(--purple-soft);
+    }
+
+    .node.yellow {
+      border-color: #eadb86;
+      background: var(--yellow-soft);
+    }
+
+    .node strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #263752;
+      font-size: 14px;
+    }
+
+    .node small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .diagram-note {
+      margin-top: 12px;
+      padding: 12px;
+      border-left: 4px solid var(--blue);
+      background: #fbfcff;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fbfcff;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .tag.p0 {
+      border-color: #ffc0bd;
+      background: var(--red-soft);
+      color: var(--red);
+    }
+
+    .tag.p1 {
+      border-color: #ffd9a3;
+      background: var(--orange-soft);
+      color: var(--orange);
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .architecture-flow {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-grid,
+      .matrix-grid,
+      .next-grid,
+      .node-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 18px 14px 36px;
+      }
+
+      .hero-side,
+      .summary-grid,
+      .matrix-grid,
+      .next-grid,
+      .node-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-title {
+        display: block;
+      }
+
+      .section-note {
+        display: block;
+        margin-top: 6px;
+        text-align: left;
+      }
+    }
+
+    @media print {
+      .nav {
+        display: none;
+      }
+
+      .page {
+        max-width: none;
+        padding: 0;
+      }
+
+      .section,
+      .hero-main,
+      .hero-side {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <section class="hero-main">
+        <p class="eyebrow">{{REPORT_EYEBROW}}</p>
+        <h1>{{REPORT_TITLE}}</h1>
+        <p class="subtitle">{{REPORT_SUBTITLE}}</p>
+        <div class="meta">
+          <span class="pill">{{META_1}}</span>
+          <span class="pill">{{META_2}}</span>
+          <span class="pill">{{META_3}}</span>
+        </div>
+      </section>
+      <aside class="hero-side">
+        <div class="metric"><span class="value">{{METRIC_1_VALUE}}</span><span class="label">{{METRIC_1_LABEL}}</span></div>
+        <div class="metric"><span class="value">{{METRIC_2_VALUE}}</span><span class="label">{{METRIC_2_LABEL}}</span></div>
+        <div class="metric"><span class="value">{{METRIC_3_VALUE}}</span><span class="label">{{METRIC_3_LABEL}}</span></div>
+        <div class="metric"><span class="value">{{METRIC_4_VALUE}}</span><span class="label">{{METRIC_4_LABEL}}</span></div>
+      </aside>
+    </header>
+
+    <nav class="nav">
+      <a href="#overview">总体状态</a>
+      <a href="#architecture">架构图</a>
+      <a href="#done">已完成</a>
+      <a href="#plan">规划</a>
+      <a href="#milestones">下一步</a>
+    </nav>
+
+    <section id="overview" class="section">
+      <div class="section-title">
+        <h2>一、总体状态</h2>
+        <span class="section-note">{{OVERVIEW_NOTE}}</span>
+      </div>
+      <div class="summary-grid">
+        <article class="summary-card"><strong>{{SUMMARY_1_TITLE}}</strong><p>{{SUMMARY_1_TEXT}}</p></article>
+        <article class="summary-card"><strong>{{SUMMARY_2_TITLE}}</strong><p>{{SUMMARY_2_TEXT}}</p></article>
+        <article class="summary-card"><strong>{{SUMMARY_3_TITLE}}</strong><p>{{SUMMARY_3_TEXT}}</p></article>
+        <article class="summary-card"><strong>{{SUMMARY_4_TITLE}}</strong><p>{{SUMMARY_4_TEXT}}</p></article>
+      </div>
+    </section>
+
+    <section id="architecture" class="section">
+      <div class="section-title">
+        <h2>二、架构图</h2>
+        <span class="section-note">{{ARCHITECTURE_NOTE}}</span>
+      </div>
+      <div class="architecture-set">
+        <div class="architecture-flow">
+          <article class="diagram-card">
+            <h3>{{LEFT_LAYER_TITLE}}</h3>
+            <p>{{LEFT_LAYER_TEXT}}</p>
+          </article>
+          <article class="diagram-card wide">
+            <h3>{{CENTER_LAYER_TITLE}}</h3>
+            <div class="node-grid">
+              <div class="node blue"><strong>{{APP_1}}</strong><small>{{APP_1_TEXT}}</small></div>
+              <div class="node blue"><strong>{{APP_2}}</strong><small>{{APP_2_TEXT}}</small></div>
+              <div class="node purple"><strong>{{APP_3}}</strong><small>{{APP_3_TEXT}}</small></div>
+            </div>
+          </article>
+          <article class="diagram-card">
+            <h3>{{RIGHT_LAYER_TITLE}}</h3>
+            <p>{{RIGHT_LAYER_TEXT}}</p>
+          </article>
+        </div>
+        <div class="diagram-note">{{ARCHITECTURE_EXPLANATION}}</div>
+      </div>
+    </section>
+
+    <section id="done" class="section">
+      <div class="section-title">
+        <h2>三、已完成</h2>
+        <span class="section-note">{{DONE_NOTE}}</span>
+      </div>
+      <div class="matrix-grid">
+        <article class="matrix-card"><strong>{{DONE_1_TITLE}}</strong><p>{{DONE_1_TEXT}}</p></article>
+        <article class="matrix-card"><strong>{{DONE_2_TITLE}}</strong><p>{{DONE_2_TEXT}}</p></article>
+        <article class="matrix-card"><strong>{{DONE_3_TITLE}}</strong><p>{{DONE_3_TEXT}}</p></article>
+        <article class="matrix-card"><strong>{{DONE_4_TITLE}}</strong><p>{{DONE_4_TEXT}}</p></article>
+      </div>
+    </section>
+
+    <section id="plan" class="section">
+      <div class="section-title">
+        <h2>四、规划</h2>
+        <span class="section-note">{{PLAN_NOTE}}</span>
+      </div>
+      <div class="matrix-grid">
+        <article class="matrix-card"><strong>{{PLAN_1_TITLE}}</strong><p>{{PLAN_1_TEXT}}</p></article>
+        <article class="matrix-card"><strong>{{PLAN_2_TITLE}}</strong><p>{{PLAN_2_TEXT}}</p></article>
+        <article class="matrix-card"><strong>{{PLAN_3_TITLE}}</strong><p>{{PLAN_3_TEXT}}</p></article>
+        <article class="matrix-card"><strong>{{PLAN_4_TITLE}}</strong><p>{{PLAN_4_TEXT}}</p></article>
+      </div>
+    </section>
+
+    <section id="milestones" class="section">
+      <div class="section-title">
+        <h2>五、下一步里程碑</h2>
+        <span class="section-note">{{MILESTONE_NOTE}}</span>
+      </div>
+      <div class="next-grid">
+        <article class="next-step"><span class="tag p0">P0</span><strong>{{MILESTONE_1_TITLE}}</strong><p>{{MILESTONE_1_TEXT}}</p></article>
+        <article class="next-step"><span class="tag p0">P0</span><strong>{{MILESTONE_2_TITLE}}</strong><p>{{MILESTONE_2_TEXT}}</p></article>
+        <article class="next-step"><span class="tag p1">P1</span><strong>{{MILESTONE_3_TITLE}}</strong><p>{{MILESTONE_3_TEXT}}</p></article>
+        <article class="next-step"><span class="tag p1">P1</span><strong>{{MILESTONE_4_TITLE}}</strong><p>{{MILESTONE_4_TEXT}}</p></article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

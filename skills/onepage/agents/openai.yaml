@@ -1,0 +1,6 @@
+interface:
+  display_name: "Onepage"
+  short_description: "生成展示型单页或分章节HTML报告、路线图、架构说明和内容综述"
+  default_prompt: "Use $onepage to turn this roadmap, project inventory, or large structured material into a polished single-page or chaptered presentation HTML report."
+policy:
+  allow_implicit_invocation: true

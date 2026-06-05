@@ -1,0 +1,149 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+# A tag push is the only thing that triggers a release. Concurrency is set
+# per-tag so two pushes of the same tag don't race on the Release object.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify skill bundle
+        run: |
+          set -euo pipefail
+          if [ ! -d "skills/onepage" ]; then
+            echo "::error::skills/onepage/ is missing; cannot package the skill."
+            exit 1
+          fi
+          if [ ! -f "skills/onepage/SKILL.md" ]; then
+            echo "::error::skills/onepage/SKILL.md is missing; cannot package the skill."
+            exit 1
+          fi
+          echo "Skill bundle at skills/onepage/ is ready to package."
+
+      - name: Validate skill sources
+        run: |
+          set -euo pipefail
+          ruby -e 'require "yaml"; text=File.read("skills/onepage/SKILL.md"); YAML.safe_load(text.split("---",3)[1]); puts "skill frontmatter ok"'
+          ruby -e 'require "yaml"; YAML.load_file("skills/onepage/agents/openai.yaml"); puts "openai yaml ok"'
+          TEMPLATE="skills/onepage/assets/report-template.html"
+          if [ ! -f "$TEMPLATE" ]; then
+            echo "::error::$TEMPLATE is missing; cannot package the skill."
+            exit 1
+          fi
+          if ! grep -qi '<!doctype html' "$TEMPLATE"; then
+            echo "::error::$TEMPLATE does not contain a <!doctype html> declaration; expected a complete HTML file."
+            exit 1
+          fi
+          echo "report template ok"
+
+      - name: Package skill bundle
+        working-directory: skills
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          # Layout: each archive's top-level directory is
+          # `onepage/`, so extracting into <skills-dir> installs
+          # the skill in one step.
+          zip -r "../onepage-${TAG}.zip" onepage
+          tar -czf "../onepage-${TAG}.tar.gz" onepage
+          tar -cf - onepage | zstd -T0 -o "../onepage-${TAG}.tar.zst"
+
+      - name: Build release notes
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          PREVIOUS_TAG="$(git tag --list 'v*' --sort=-v:refname | grep -vx "$TAG" | head -n 1 || true)"
+          RELEASE_NOTES_FILE="releases/${TAG}.md"
+
+          if [ ! -f "$RELEASE_NOTES_FILE" ]; then
+            echo "::error::Missing ${RELEASE_NOTES_FILE}. Write agent-authored release notes before pushing ${TAG}."
+            exit 1
+          fi
+
+          {
+            cat "$RELEASE_NOTES_FILE"
+            echo
+            echo "## Commits"
+            echo
+            if [ -n "$PREVIOUS_TAG" ]; then
+              echo "Since \`$PREVIOUS_TAG\`:"
+              echo
+              git log --pretty=format:'- %s (%h)' "${PREVIOUS_TAG}..${TAG}" |
+                sed -E 's/ \[model:[^]]+\]//g'
+              echo
+              echo
+              echo "Compare: https://github.com/${GITHUB_REPOSITORY}/compare/${PREVIOUS_TAG}...${TAG}"
+            else
+              echo "Initial release:"
+              echo
+              git log --pretty=format:'- %s (%h)' "$TAG" |
+                sed -E 's/ \[model:[^]]+\]//g'
+            fi
+
+            cat <<NOTES | sed 's/^  //'
+
+            ## Skill bundle
+
+            Download an archive for your environment and extract it directly
+            into your agent's skill directory. Each archive's top-level
+            directory is \`onepage/\`, so a single extraction
+            places the skill at the correct path.
+
+            - Windows: use \`onepage-${TAG}.zip\`
+            - Unix-like environments with zstd: use \`onepage-${TAG}.tar.zst\`
+            - Other Unix-like environments: use \`onepage-${TAG}.tar.gz\`
+
+            ### Install on Unix-like environments
+
+            \`\`\`bash
+            # Pick the directory that matches your agent; examples below.
+            SKILLS_DIR=.opencode/skills   # project-level
+            # SKILLS_DIR=~/.config/opencode/skills   # global
+            VERSION=${TAG}
+
+            mkdir -p "\$SKILLS_DIR"
+            rm -rf "\$SKILLS_DIR/onepage"
+            if command -v zstd >/dev/null 2>&1; then
+              curl -L --fail -o /tmp/onepage.tar.zst "https://github.com/${GITHUB_REPOSITORY}/releases/download/\${VERSION}/onepage-\${VERSION}.tar.zst"
+              zstd -dc /tmp/onepage.tar.zst | tar -xf - -C "\$SKILLS_DIR"
+              rm /tmp/onepage.tar.zst
+            else
+              curl -L --fail -o /tmp/onepage.tar.gz "https://github.com/${GITHUB_REPOSITORY}/releases/download/\${VERSION}/onepage-\${VERSION}.tar.gz"
+              tar -xzf /tmp/onepage.tar.gz -C "\$SKILLS_DIR"
+              rm /tmp/onepage.tar.gz
+            fi
+            \`\`\`
+
+            See the [README](https://github.com/${GITHUB_REPOSITORY}#quick-start)
+            for the full installation guide and per-agent directory conventions.
+          NOTES
+          } > RELEASE_BODY.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          fail_on_unmatched_files: true
+          body_path: RELEASE_BODY.md
+          files: |
+            onepage-${{ github.ref_name }}.zip
+            onepage-${{ github.ref_name }}.tar.gz
+            onepage-${{ github.ref_name }}.tar.zst
