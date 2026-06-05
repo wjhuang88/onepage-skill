@@ -4,7 +4,7 @@ description: Create polished, self-contained presentation HTML pages from roadma
 license: MIT
 metadata:
   author: wjhuang88
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # Presentation HTML Report
@@ -55,6 +55,7 @@ Steps follow the Decision Priorities above. Each step is tagged with its priorit
 
 - Prefer HTML/CSS diagrams for presentation pages when the diagram needs to live in the report itself.
 - Use aligned three-column architecture grids for comparable diagrams. Keep column widths consistent across related diagrams.
+- Keep three-column architecture cards equal height while keeping card titles single-line, top-aligned, and visually aligned across columns. Title-to-content spacing must be uniform in left, center, and right columns.
 - Show direct service entry points as a separate outward-facing layer when the page needs to explain what business systems can call.
 - Distinguish deployed, independently hosted, in-progress, and support capabilities with color and small text, not by overcrowding app cards with technical labels.
 - Avoid standalone legends when the card labels and color semantics are obvious.
@@ -73,5 +74,5 @@ Steps follow the Decision Priorities above. Each step is tagged with its priorit
 - Desktop layout is dense but readable; mobile layout collapses to one column.
 - Section headings, notes, and cards align cleanly.
 - No text overlaps later content.
-- Architecture diagrams use consistent widths and color meaning.
+- Architecture diagrams use consistent widths, equal-height outer cards, top-aligned single-line card titles, uniform title-to-content spacing, and stable color meaning.
 - The final page can be printed or shared as a static artifact.

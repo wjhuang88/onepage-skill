@@ -19,6 +19,7 @@ Architecture diagrams:
 - Use `.architecture-set` to stack multiple diagrams.
 - Use the same `.architecture-flow` grid across related diagrams:
   `grid-template-columns: minmax(220px, 0.85fr) minmax(0, 2fr) minmax(240px, 0.95fr);`
+- Use `align-items: stretch` on `.architecture-flow` so the three outer cards stay equal height. Keep content top-aligned inside each card with the `.diagram-card` rules below.
 - Use `.diagram-card.wide` for center columns or full-width layers.
 - Keep app cards compact. If a card no longer needs technical IDs, reduce padding and min-height.
 
@@ -72,6 +73,36 @@ For presentation-facing diagrams:
 ### Architecture Diagram (.architecture-flow)
 - Always use the three-column grid: left context → center detail → right context.
 - Column widths must use the same `grid-template-columns` across all architecture diagrams on the page.
+- Use `align-items: stretch` on `.architecture-flow` so the three outer cards stay equal height. The misalignment bug is fixed inside `.diagram-card`, not by making the outer cards different heights.
+- Every `.diagram-card` must use the same internal layout:
+
+  ```css
+  .architecture-flow {
+    align-items: stretch;
+  }
+
+  .diagram-card {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 10px;
+  }
+
+  .diagram-card h3 {
+    margin: 0;
+    line-height: 1.5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .diagram-card > :not(h3) {
+    align-self: start;
+  }
+  ```
+
+- Diagram card titles must be single-line and top-aligned. If a title wraps, shorten the label before changing card height.
+- The first content block inside every `.diagram-card` must rely on the card's `gap`; do not add inline `margin-top` to side columns or center columns.
+- Use the same body gap and node padding across side and center columns. A center `.node-grid` should not have a different title-to-first-node rhythm than side-column content.
 - App nodes (.node) should be compact. If a node needs more than 2 lines of description, use a separate detail section.
 - Split physical deployment from logical application architecture into separate diagrams when a single diagram becomes too dense to scan.
 

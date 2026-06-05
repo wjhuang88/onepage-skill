@@ -42,7 +42,7 @@ For very large source sets, generate in passes:
 
 These are documented gaps where the system's constraints produce known imperfections. Do not try to "fix" these with ad-hoc workarounds — they are accepted tradeoffs.
 
-- **Three-column architecture grids look hollow when content is asymmetric.** If the left column has one item and the center has six, the grid will have visible white space. This is preferable to breaking the column alignment. Accept the imbalance or split into separate diagrams.
+- **Three-column architecture grids may look sparse when content is asymmetric.** If the left column has one item and the center has six, whitespace is expected. Keep the three outer cards equal height with `align-items: stretch`, but keep each card's title and first content block top-aligned inside the card. If the imbalance distracts from comprehension, split the view into separate diagrams or move dense details into a follow-up section.
 
 - **Print mode breaks long tables across pages.** Tables exceeding the printable page height will split mid-row. Mitigation: keep tables under ~15 rows, or place dense tables in a downloadable attachment rather than the printed page.
 

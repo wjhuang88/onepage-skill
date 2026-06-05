@@ -97,6 +97,7 @@ These principles explain why the visual language and layout rules exist. When yo
 - Do give each chapter a single takeaway. If a chapter has no clear point, merge it with an adjacent one or convert it to supporting detail.
 - Do return to white background between major sections. The white panel + shadow rhythm creates visual separation without relying on color variation.
 - Do check architecture diagram column widths against each other. Related diagrams that use different column widths feel like they belong to different pages.
+- Do check architecture card titles against each other. In a three-column diagram, outer cards should stay equal height while h3 titles remain single-line, top-aligned, and separated from the first content block by the same visual gap in every column.
 
 ### Don't
 
@@ -157,6 +158,7 @@ Before finishing:
 
 - Check whether section card text volume is balanced.
 - Check whether architecture columns align across diagrams.
+- Check whether architecture cards are equal height, while titles remain single-line, top-aligned, and have uniform title-to-content spacing across columns.
 - Check whether bottom milestone cards are visually aligned.
 - Check whether color categories are consistent.
 - Check whether common capabilities appear once, not repeatedly.
