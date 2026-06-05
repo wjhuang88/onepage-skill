@@ -84,7 +84,7 @@ These principles explain why the visual language and layout rules exist. When yo
 
 5. **Content drives structure, not the reverse.** Start from the source material's natural shape, then choose a narrative structure. Forcing content into a fixed section template (always: overview → architecture → done → plan → milestones) produces mechanical pages. The page modes (executive report, roadmap, technical explainer, etc.) exist precisely to avoid this trap.
 
-6. **Self-contained means no excuses.** Every output must work as a single `.html` file — no CDN calls, no external fonts, no image references. This constraint is non-negotiable because the primary distribution channel is email attachment or chat file-share, where network conditions are unknown.
+6. **Self-contained by default.** Every output should work as a single `.html` file — no CDN calls, no external fonts, no remote image references. This is the default because the primary distribution channel is email attachment or chat file-share, where network conditions are unknown. If the user explicitly asks for external assets, state that the result is no longer fully offline/shareable and prefer embedded or local assets when practical.
 
 ## Do's and Don'ts
 
@@ -105,7 +105,7 @@ These principles explain why the visual language and layout rules exist. When yo
 - Don't mix more than two visual patterns in one chapter. If a chapter has metric cards AND a comparison table AND an architecture diagram, restructure it into sub-sections or separate chapters.
 - Don't create a legend for architecture diagrams when the card labels and color semantics already make categories obvious. Legends add clutter without adding information.
 - Don't repeat the same capability in multiple cards. Establish it once in its canonical location, then reference by name elsewhere.
-- Don't use rounded pill buttons, gradient backgrounds, or drop shadows on individual cards. The system uses flat white panels with 8px radius and subtle shadow — adding stronger visual treatments breaks the consistent rhythm.
+- Don't use decorative rounded pill buttons, gradient backgrounds, or drop shadows on individual cards. Metadata pills, priority tags, and sticky navigation anchors are allowed as functional labels; ordinary cards and controls should keep the flat white 8px treatment.
 - Don't flatten large material into a single long list. If you have more than 6 cards of the same type, group them into sub-sections or switch to a table format.
 
 ## Visual Pattern Selection

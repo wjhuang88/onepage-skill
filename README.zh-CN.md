@@ -2,9 +2,9 @@
 
 [English →](README.md)
 
-**单页 HTML 报告生成 Skill** — 将结构化材料（路线图、项目清单、架构说明、实施计划、产品简报、研究摘要等）转化为精致的单页或分章节展示型 HTML 报告。
+**单页 HTML 页面生成 Skill** — 将结构化材料（路线图、项目清单、架构说明、实施计划、产品简报、研究发现等）转化为精致的单页或分章节展示型 HTML 页面。
 
-生成物为**自包含的 `.html` 文件**：内联 CSS、无外部依赖、可直接分享、打印或嵌入。面向领导汇报、技术展示、路线图评审等场景。
+生成物默认是**自包含的 `.html` 文件**：内联 CSS、无外部依赖、可直接分享、打印或嵌入。只有在用户明确要求并接受非离线页面时，才使用外部资源。
 
 GitHub 仓库：<https://github.com/wjhuang88/onepage-skill>
 
@@ -39,26 +39,31 @@ wjhuang88/onepage-skill/
 
 ## 安装
 
-将 Skill 克隆到本地后，可直接被支持 Skill 协议的 Agent 加载使用：
+从 [GitHub Releases](https://github.com/wjhuang88/onepage-skill/releases) 下载最新发布归档，并解压到你的 Agent Skills 目录：
 
 ```bash
-git clone https://github.com/wjhuang88/onepage-skill.git
+VERSION=$(curl -fsSL https://api.github.com/repos/wjhuang88/onepage-skill/releases/latest |
+  sed -n 's/.*"tag_name": "\(v[^"]*\)".*/\1/p')
+mkdir -p ~/.codex/skills
+curl -L --fail -o /tmp/onepage.tar.gz \
+  "https://github.com/wjhuang88/onepage-skill/releases/download/${VERSION}/onepage-${VERSION}.tar.gz"
+tar -xzf /tmp/onepage.tar.gz -C ~/.codex/skills
 ```
 
-加载路径为仓库内的 `skills/onepage/` 目录。
+安装后，Agent 可通过 `onepage` 加载该 Skill。项目级安装、Windows 安装和排障说明见 [INSTALL.md](INSTALL.md)。
 
 ---
 
 ## 适用场景
 
-当你需要将以下材料转化为**可分享、可阅读、可打印**的 HTML 页面时使用本 Skill：
+当你明确需要将以下材料转化为**可分享、可阅读、可打印**的 HTML 页面时使用本 Skill；如果只是普通文字总结或 Markdown 报告，不需要触发本 Skill。
 
 - 项目路线图（Roadmap）
 - 系统架构说明
 - 项目状态清单 / 能力清单
 - 实施计划或里程碑追踪
 - 产品简报（Product Brief）
-- 研究摘要或调查报告
+- 研究摘要页面或调查结果展示页
 - 技术方案演示
 - 运营计划或工作汇报
 
@@ -84,7 +89,7 @@ git clone https://github.com/wjhuang88/onepage-skill.git
 | 技术说明（Technical Explainer） | 概念图、架构、流程、接口、约束、发布计划 |
 | 路线图（Roadmap） | 时间线、版本规划、迁移计划 |
 | 产品简报（Product Brief） | 定位、受众、场景、功能、差异化、上线计划 |
-| 研究摘要（Research Digest） | 发现、证据、主题对比、建议 |
+| 研究摘要页面（Research Digest Page） | 发现、证据、主题对比、建议 |
 | 项目清单（Project Inventory） | 平台/应用/服务/能力的全局盘点 |
 | 运营计划（Operating Plan） | 目标、工作流、依赖、决策、风险控制 |
 | 分章节长文（Chaptered Showcase） | 大量材料的主题化组织与展示 |
@@ -135,7 +140,7 @@ git clone https://github.com/wjhuang88/onepage-skill.git
 
 ### 作为 Agent Skill 使用
 
-本 Skill 遵循标准 Skill 调用协议。Agent 在处理汇报类请求时会自动加载 `skills/onepage/SKILL.md`，按需读取 `skills/onepage/references/design-system.md`，并基于 `skills/onepage/assets/report-template.html` 生成 HTML。
+本 Skill 遵循标准 Skill 调用协议。Agent 在处理 HTML 汇报页、展示页或可视化报告请求时会自动加载 `skills/onepage/SKILL.md`，按需读取 `skills/onepage/references/design-system.md`，并基于 `skills/onepage/assets/report-template.html` 生成 HTML。
 
 典型调用流程：
 
@@ -159,7 +164,8 @@ git clone https://github.com/wjhuang88/onepage-skill.git
 
 1. 复制 `skills/onepage/assets/report-template.html`
 2. 替换所有 `{{PLACEHOLDER}}` 占位符为实际内容
-3. 根据需要增减章节、卡片和架构图组件
+3. 将默认项目状态章节替换为当前页面模式需要的章节
+4. 根据需要增减章节、卡片和架构图组件
 
 模板中的主要占位符：
 
@@ -200,8 +206,8 @@ git clone https://github.com/wjhuang88/onepage-skill.git
 
 ## 技术约束
 
-- **无外部依赖**：所有 CSS 内联，不依赖 CDN 或外部资源，可离线使用
-- **单文件输出**：一个 `.html` 文件包含所有内容
+- **默认无外部依赖**：所有 CSS 内联；除非用户明确接受非离线页面，否则不依赖 CDN 或远程资源
+- **默认单文件输出**：一个 `.html` 文件包含必要结构和样式；外部资源仅在用户明确要求时使用
 - **浏览器兼容**：使用标准 CSS（Grid、Flexbox、CSS Variables），兼容主流现代浏览器
 - **中英文混排**：字体栈优先 PingFang SC / Microsoft YaHei，适合中文展示
 

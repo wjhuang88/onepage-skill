@@ -5,9 +5,10 @@ project inventories, architecture notes, implementation plans, product
 briefs, research summaries, status reports) into polished, self-contained
 **single-page or chaptered presentation HTML**.
 
-Every output is a **self-contained `.html` file**: inline CSS, no external
-dependencies, ready to share, print, or embed. Built for executive
-readouts, technical showcases, and roadmap reviews.
+Every output is a **self-contained `.html` file by default**: inline CSS,
+no external dependencies unless explicitly requested, ready to share,
+print, or embed. Built for executive readouts, technical showcases, and
+roadmap reviews.
 
 [中文说明 / Chinese version →](README.zh-CN.md)
 
@@ -22,10 +23,11 @@ attaches it to a GitHub Release.
 
 ## The Problem
 
-Structured materials — roadmaps, architecture notes, status reports,
-research summaries — are usually shared as long Markdown documents or
-scattered slides. Both fail in the same ways when reviewed by leadership
-or cross-functional stakeholders:
+Structured materials — roadmaps, architecture notes, status updates,
+research findings — often need to become a shareable presentation page
+rather than another long Markdown document or scattered slide deck. Those
+raw formats fail in the same ways when reviewed by leadership or
+cross-functional stakeholders:
 
 - **No visual hierarchy** — wall-of-text dumps hide the headline
   outcome and force the reader to extract it themselves.
@@ -57,7 +59,7 @@ and the intended audience:
 | Technical Explainer | Architecture, flows, interfaces, constraints, release plans |
 | Roadmap | Timelines, version plans, migration schedules |
 | Product Brief | Positioning, audience, scenarios, features, differentiators, launch |
-| Research Digest | Findings, evidence, theme comparisons, recommendations |
+| Research Digest Page | Findings, evidence, theme comparisons, recommendations |
 | Project Inventory | Global catalog of platforms / apps / services / capabilities |
 | Operating Plan | Goals, workflows, dependencies, decisions, risk controls |
 | Chaptered Showcase | Large material organized into themed chapters |
@@ -145,22 +147,27 @@ contains authoring source, release tooling, and this README.
 
 ### Install
 
-Download the latest release zip from
+Download the latest release archive from
 [GitHub Releases](https://github.com/wjhuang88/onepage-skill/releases) and
 unpack it into your Agent Skills directory (typically
 `~/.codex/skills/` or your platform's equivalent):
 
 ```bash
-curl -L -o /tmp/onepage.zip \
-  https://github.com/wjhuang88/onepage-skill/releases/latest/download/onepage.zip
-unzip /tmp/onepage.zip -d ~/.codex/skills/
+VERSION=$(curl -fsSL https://api.github.com/repos/wjhuang88/onepage-skill/releases/latest |
+  sed -n 's/.*"tag_name": "\(v[^"]*\)".*/\1/p')
+mkdir -p ~/.codex/skills
+curl -L --fail -o /tmp/onepage.tar.gz \
+  "https://github.com/wjhuang88/onepage-skill/releases/download/${VERSION}/onepage-${VERSION}.tar.gz"
+tar -xzf /tmp/onepage.tar.gz -C ~/.codex/skills
 ```
 
 The skill will then be available to your agent as `onepage`.
+See [INSTALL.md](INSTALL.md) for project-level installs, Windows instructions,
+and troubleshooting.
 
 ### Use
 
-Describe what you want in natural language — the agent will load
+Ask for an HTML page or visual report in natural language — the agent will load
 `SKILL.md` automatically, read `references/design-system.md` on
 demand, and generate HTML from `assets/report-template.html`.
 
@@ -196,7 +203,8 @@ If you just want a clean HTML template to fill in by hand:
 
 1. Copy `skills/onepage/assets/report-template.html`.
 2. Replace every `{{PLACEHOLDER}}` with your content.
-3. Add or remove sections, cards, and architecture nodes as needed.
+3. Replace the default project-status sections with the page mode you need.
+4. Add or remove sections, cards, and architecture nodes as needed.
 
 Key placeholders:
 
@@ -243,9 +251,10 @@ Before delivering a report, verify:
 
 ## Technical Constraints
 
-- **No external dependencies** — all CSS is inline; no CDN, no
-  external resources, fully offline.
-- **Single-file output** — one `.html` file contains everything.
+- **No external dependencies by default** — all CSS is inline; no CDN
+  or remote assets unless the user explicitly accepts a non-offline page.
+- **Single-file output by default** — one `.html` file contains all
+  required markup and styles; external assets are opt-in.
 - **Browser compatibility** — standard CSS only (Grid, Flexbox, CSS
   Variables); works in all modern browsers.
 - **Mixed CJK + Latin** — font stack prioritizes PingFang SC and
@@ -258,7 +267,7 @@ After modifying the skill, run the basic validator:
 
 ```bash
 python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py \
-  /path/to/onepage
+  /path/to/onepage-skill/skills/onepage
 ```
 
 Manual checks:

@@ -1,6 +1,6 @@
 ---
 name: onepage
-description: Create polished, self-contained presentation HTML pages from roadmaps, inventories, architecture notes, research summaries, project status lists, implementation plans, product briefs, or other structured materials. Use when the user asks to generate or refine a shareable single-page or chaptered HTML artifact for executive review, technical presentation, roadmap display, capability inventory, milestone tracking, status summary, or large-content synthesis with clear visual hierarchy and embedded diagrams. Chinese triggers include 生成报告, HTML报告, 路线图页面, 架构展示, 汇报页面, 领导汇报, 项目状态总结, 产品简报, 研究摘要.
+description: Create polished, self-contained presentation HTML pages from roadmaps, inventories, architecture notes, research summaries, project status lists, implementation plans, product briefs, or other structured materials. Use when the user explicitly asks for a shareable single-page or chaptered HTML artifact, presentation page, visual report, roadmap display, architecture showcase, executive review page, capability inventory page, milestone/status dashboard, or large-content synthesis page with clear visual hierarchy and embedded diagrams. Do not use for ordinary text-only summaries, Markdown reports, or analysis unless the user wants an HTML/page artifact. Chinese triggers include HTML报告, 单页报告, 展示页面, 路线图页面, 架构展示, 汇报页面, 领导汇报页面, 项目状态看板, 产品简报页面, 研究摘要页面.
 license: MIT
 metadata:
   author: wjhuang88
@@ -29,13 +29,13 @@ Steps follow the Decision Priorities above. Each step is tagged with its priorit
 2. **[Page mode]** Choose the page mode before writing any HTML: executive report, technical explainer, roadmap, product brief, research digest, project inventory, operating plan, or chaptered long-form showcase.
 3. **[Chapter flow]** Design the chapter flow around the material instead of forcing a fixed report structure. Choose, merge, split, or reorder sections so the page has a clear narrative arc for the intended reader.
 4. **[Chapter flow]** Convert raw notes into balanced sections that match the chosen flow. Common building blocks include overview, architecture or operating model, current state, evidence, completed work, in-progress work, gaps, plan, risks, milestones, and appendix-style details.
-5. **[Visual pattern]** For very large inputs, first build a flexible chapter plan: group source material by theme, define the main takeaway or question for each chapter, assign each chapter a dominant visual pattern (metric cards, comparison matrix, architecture diagram, timeline, roadmap, risk register, capability map, detail table), and decide what belongs in summary cards versus detail sections.
+5. **[Visual pattern]** For very large inputs, build a chapter plan before drafting HTML. Keep the detailed planning workflow in `references/advanced-guide.md`.
 6. **[Color mapping]** Before writing content, lock the semantic color assignments for the whole page so the same color means the same thing everywhere. Detailed palette and semantics live in `references/design-system.md`.
 7. **[Template & layout]** Use `assets/report-template.html` as the base when creating a new page. Preserve the responsive layout, print support, compact cards, sticky navigation, and color semantics unless the target repo already has a stronger design system. Read references progressively:
    - `references/design-system.md` — always (principles, pattern selection, visual language, wording, checklist).
    - `references/layout-reference.md` — when building or tuning layout, diagrams, or component details.
    - `references/advanced-guide.md` — when the source is very large, iterating on an existing page, or hitting edge cases.
-8. **[Content fill]** Write content into the locked structure. Apply the Content Rules below as you go. Keep the output self-contained unless the user requests external assets; inline CSS is preferred for standalone presentation HTML.
+8. **[Content fill]** Write content into the locked structure. Apply the Content Rules below as you go. Keep the output self-contained by default; if the user explicitly requests external assets, call out that the result will no longer be fully offline/shareable.
 9. **[Verify]** Verify the page by opening or inspecting the generated HTML for overlapping text, inconsistent grid widths, cramped cards, weak chapter flow, and mismatched color semantics.
 
 ## Content Rules
@@ -62,12 +62,10 @@ Steps follow the Decision Priorities above. Each step is tagged with its priorit
 ## Large Content Planning
 
 - Start with an outline before drafting HTML when the source material is long, fragmented, or covers multiple systems, teams, periods, or decisions.
-- Choose the number of chapters based on the material and reading task. As a practical default, broad materials often work well with 5-9 top-level anchors, but clarity is more important than hitting that range.
-- Give each chapter a job: orient, compare, explain, prove, decide, sequence, track risk, teach a concept, or show evidence.
-- Assign each chapter a primary visual pattern: metric cards, comparison matrix, architecture diagram, timeline, roadmap, risk register, capability map, or detail table.
-- Use the hero and first overview section as a compression layer. They should tell the reader what changed, what matters now, and where to look next.
+- Give each chapter one job and one dominant visual pattern.
+- Use the hero and first overview section as a compression layer: what changed, what matters now, and where to look next.
 - Put low-level details near the chapter they support, not in a detached dump at the end unless they are true appendix material.
-- Preserve visual order even when the chapter order is custom: consistent heading hierarchy, stable section spacing, aligned grids, restrained card counts, and navigation labels that scan cleanly.
+- For chapter counts, pass-based generation, and edge cases, read `references/advanced-guide.md`.
 
 ## Output Checklist
 
