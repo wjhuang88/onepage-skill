@@ -2,6 +2,9 @@
 name: onepage
 description: Create polished, self-contained presentation HTML pages from roadmaps, inventories, architecture notes, research summaries, project status lists, implementation plans, product briefs, or other structured materials. Use when the user asks to generate or refine a shareable single-page or chaptered HTML artifact for executive review, technical presentation, roadmap display, capability inventory, milestone tracking, status summary, or large-content synthesis with clear visual hierarchy and embedded diagrams. Chinese triggers include 生成报告, HTML报告, 路线图页面, 架构展示, 汇报页面, 领导汇报, 项目状态总结, 产品简报, 研究摘要.
 license: MIT
+metadata:
+  author: wjhuang88
+  version: "0.1.0"
 ---
 
 # Presentation HTML Report
