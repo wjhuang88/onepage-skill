@@ -1,4 +1,8 @@
-# Presentation HTML Design System
+# Presentation HTML — Core Methodology
+
+Always read this file when generating a presentation HTML report. It contains the design principles, pattern selection rules, visual language, wording guidance, and review checklist — the minimum context needed for every generation task.
+
+For layout details and component specs, read [layout-reference.md](layout-reference.md) when building or tuning the page structure. For large-content chaptering, iteration guidance, and known limitations, read [advanced-guide.md](advanced-guide.md) when the task is complex.
 
 ## Source Experience
 
@@ -66,85 +70,65 @@ Use a neutral operational palette:
 
 Do not use one color family for everything. If two blocks share a color, they should share a semantic category.
 
-## Layout Patterns
+## Design Principles
 
-Use `max-width: 1360px` for wide presentation reports. Keep body font at `14px/1.65` for dense Chinese and English mixed content.
+These principles explain why the visual language and layout rules exist. When you encounter a scenario not covered by a specific rule, fall back to these principles rather than inventing a new pattern.
 
-Recommended top layout:
+1. **Density serves scanning.** This system targets leadership audiences who need to grasp status in seconds. 14px body text, compact cards, and tight spacing are deliberate — they maximize information per viewport. If a layout feels "spacious enough to relax in," it is probably too loose for a presentation report.
 
-- `.hero`: two-column grid, main narrative on the left and metrics on the right.
-- `.hero-side`: two-column metric grid.
-- `.nav`: sticky, horizontally scrollable anchors.
-- `.section`: white panel with 8px radius and a subtle shadow.
-- `.summary-grid`: 4-5 equal cards.
+2. **Color is classification, not decoration.** Every color in this system carries a fixed semantic meaning. Blue = deployed/runtime. Green = shared support. Orange = in-progress. Purple = external. Yellow = storage. Red = risk/governance. Using color for visual variety (e.g., making every card a different color "to look nice") breaks the system. If two things share a color, the reader will assume they share a category.
 
-Architecture diagrams:
+3. **One card, one idea.** Each card should answer a single question for the reader. If you find yourself writing "and also" inside a card, split it. Dense evidence, multi-point comparisons, and implementation details belong in dedicated blocks — not inside a card that also carries a headline.
 
-- Use `.architecture-set` to stack multiple diagrams.
-- Use the same `.architecture-flow` grid across related diagrams:
-  `grid-template-columns: minmax(220px, 0.85fr) minmax(0, 2fr) minmax(240px, 0.95fr);`
-- Use `.diagram-card.wide` for center columns or full-width layers.
-- Keep app cards compact. If a card no longer needs technical IDs, reduce padding and min-height.
+4. **Hierarchy through structure, not font size.** The system uses a limited type scale (14px body, 15px card title, 17px h3, 23px h2, 34px h1). Visual hierarchy comes from position (hero → nav → sections), container weight (white panel with shadow), and structural role (summary card vs detail card) — not from introducing new font sizes or weights.
 
-Mobile rules:
+5. **Content drives structure, not the reverse.** Start from the source material's natural shape, then choose a narrative structure. Forcing content into a fixed section template (always: overview → architecture → done → plan → milestones) produces mechanical pages. The page modes (executive report, roadmap, technical explainer, etc.) exist precisely to avoid this trap.
 
-- Collapse hero and architecture grids to one column below 900px.
-- Collapse summary, matrix, and milestone grids to one or two columns depending on available width.
-- Avoid fixed heights except for compact status labels or visual chips.
+6. **Self-contained means no excuses.** Every output must work as a single `.html` file — no CDN calls, no external fonts, no image references. This constraint is non-negotiable because the primary distribution channel is email attachment or chat file-share, where network conditions are unknown.
 
-## Architecture Diagram Guidance
+## Do's and Don'ts
 
-When representing a platform:
+### Do
 
-- Split infrastructure from application organization if physical deployment and logical app composition are mixed.
-- Put direct external service entry points in their own layer.
-- Put runtime as a wrapper around apps when all apps share the same runtime.
-- Put common capabilities outside apps and connect them conceptually through copy or layout.
-- Put MCP or integration services outside apps as support services; app cards should not repeat every MCP binding.
-- For in-progress capabilities that are not deployed apps, use a pipeline strip or capability band rather than a fake app card.
+- Do decide the page mode before writing any HTML. The mode determines which sections exist and which visual patterns apply.
+- Do assign semantic colors at the page level before filling content. Map categories (deployed, shared, in-progress, external, storage, risk) to colors once, then use consistently.
+- Do use business-readable names as primary labels. "订单服务" not "order-service-v2-prod". Internal identifiers belong in secondary text only.
+- Do keep card text under 3 lines. If you need more words, the card is trying to do too much — split or move detail to a dedicated section.
+- Do give each chapter a single takeaway. If a chapter has no clear point, merge it with an adjacent one or convert it to supporting detail.
+- Do return to white background between major sections. The white panel + shadow rhythm creates visual separation without relying on color variation.
+- Do check architecture diagram column widths against each other. Related diagrams that use different column widths feel like they belong to different pages.
 
-For presentation-facing diagrams:
+### Don't
 
-- Use Chinese or business names in primary labels.
-- Hide internal deployment names unless the page is explicitly technical.
-- Replace environment variable names with business descriptions.
-- Avoid showing unclear implementation guesses. Use neutral wording like "independent environment" when the exact hosting form is unknown.
+- Don't use color to indicate priority. Priority is communicated by P0/P1 tags and card ordering. Color is reserved for semantic categories.
+- Don't place internal system IDs, environment variable names, or deployment hostnames as primary labels. These are implementation details that break readability for the target audience.
+- Don't mix more than two visual patterns in one chapter. If a chapter has metric cards AND a comparison table AND an architecture diagram, restructure it into sub-sections or separate chapters.
+- Don't create a legend for architecture diagrams when the card labels and color semantics already make categories obvious. Legends add clutter without adding information.
+- Don't repeat the same capability in multiple cards. Establish it once in its canonical location, then reference by name elsewhere.
+- Don't use rounded pill buttons, gradient backgrounds, or drop shadows on individual cards. The system uses flat white panels with 8px radius and subtle shadow — adding stronger visual treatments breaks the consistent rhythm.
+- Don't flatten large material into a single long list. If you have more than 6 cards of the same type, group them into sub-sections or switch to a table format.
 
-## Large Content Chaptering
+## Visual Pattern Selection
 
-When the input is too large to fit naturally into the template, plan the page before writing final copy. The goal is not to force a standard chapter count; the goal is to make a large body of material feel intentionally organized.
+Use this decision table when assigning a dominant visual pattern to each chapter. Every chapter should have one primary pattern; a short note or secondary detail block may accompany it.
 
-1. Inventory the source material into themes, decisions, systems, timelines, risks, and evidence.
-2. Select a chapter count that fits the reader's task. Five to nine top-level anchors is a useful default for broad pages, but shorter pages may need three or four sections, and reference-heavy pages may need more with grouped navigation.
-3. Choose the ordering logic deliberately: urgency, chronology, dependency, business domain, user journey, system layer, maturity level, or decision sequence.
-4. Write one takeaway per chapter. If a chapter has no takeaway, merge it or turn it into supporting detail.
-5. Choose one dominant visual pattern per chapter:
-   - metric cards for status snapshots;
-   - comparison matrix for alternatives, teams, systems, or capabilities;
-   - architecture diagram for structural explanation;
-   - timeline or roadmap for sequence;
-   - risk register for uncertainty and mitigation;
-   - detail table for dense facts that must remain visible.
-6. Keep the top of the page as a compression layer: hero metrics, summary cards, and navigation should help the reader choose a path through the material.
-7. Use progressive disclosure inside the single page: summary first, then grouped evidence, then implementation or appendix detail.
-8. Balance chapter density. Avoid one chapter with twenty cards and another with one thin note unless the imbalance is intentional.
-9. Keep the visual system consistent even when the story structure is custom: repeated section rhythm, aligned grids, predictable card sizes, consistent tag placement, and restrained color use.
+| Pattern | When to use | When NOT to use |
+|---|---|---|
+| **Metric cards** (summary-grid) | Status snapshots, KPI overviews, count-based summaries where each card answers "how many" or "what status" | When cards would need paragraphs to explain — use a detail section instead |
+| **Architecture diagram** (architecture-flow) | Explaining system structure, platform composition, service relationships, deployment topology | When the material is sequential (use timeline) or comparative (use matrix) |
+| **Comparison matrix** (matrix-grid) | Comparing alternatives, teams, systems, options, or before/after states side by side | When items have no shared comparison dimensions — use separate cards |
+| **Timeline / Roadmap** | Sequential events, version plans, migration phases, milestone sequences | When order doesn't matter — use thematic grouping instead |
+| **Milestone cards** (next-grid with P0/P1 tags) | Action-oriented next steps with priority, owner, and concrete outcome | For historical accomplishments — use regular cards without priority tags |
+| **Detail table** | Dense facts that must stay visible: feature lists, configuration tables, dependency matrices | When the reader needs a quick takeaway — use cards instead |
+| **Risk register** | Uncertainty tracking with likelihood, impact, and mitigation | When all items are confirmed facts with no uncertainty |
+| **Chaptered long-form** (multiple section blocks) | Very large inputs (>5000 words) covering multiple themes, systems, or time periods | When the material fits naturally into 3-5 sections without forced grouping |
 
-Use these layout guardrails to preserve polish:
+### Pattern Combination Rules
 
-- Navigation labels should be short and parallel, ideally 2-6 words each.
-- Top-level sections should use similar vertical spacing and heading treatment.
-- Card grids should usually contain 3-6 cards; if there are more, group them into sub-sections or tables.
-- A chapter should not mix too many patterns. Prefer one main pattern plus a short note or secondary detail block.
-- Dense tables should have clear headers, small text only where necessary, and enough column width to avoid cramped wrapping.
-- If a chapter is intentionally long, add subheadings or internal grouping so it does not become a wall of cards.
-
-For very large source sets, generate in passes:
-
-1. Outline and chapter map.
-2. Section-by-section content extraction.
-3. HTML composition with anchors and reusable card patterns.
-4. Visual QA for overflow, repeated content, color consistency, and chapter flow.
+- A chapter may combine its primary pattern with one secondary element: a short note block, a diagram-note annotation, or a small inline table.
+- If two patterns feel equally important, split the chapter into two sub-sections.
+- The hero section always uses metric cards. Do not place architecture diagrams or long text in the hero.
+- Navigation anchors should reflect chapter purpose, not pattern type. "Current Status" not "Card Grid".
 
 ## Wording Guidance
 
